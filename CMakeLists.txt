@@ -18,6 +18,8 @@ set(PROJECT_SOURCES
        src/main.cpp
        src/mainwindow.cpp
        src/mainwindow.h
+       src/ssh_conf_parser.cpp
+       src/ssh_conf_parser.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

@@ -1,46 +1,70 @@
+// main.cpp
+
+
 #include "mainwindow.h"
 
 #include <QApplication>
 #include <QCommandLineParser>
 
 #include <iostream>
+#include "ssh_conf_parser.h"
 
 
-#define WWIDTH_DEFAULT  800
-#define WHEIGHT_DEFAULT 600
+// #define const WWIDTH_DEFAULT  800
+// #define const WHEIGHT_DEFAULT 600
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    MainWindow w;
+	int WWIDTH_DEFAULT  = 800;
+	int WHEIGHT_DEFAULT = 600;
 
-    QCommandLineParser parser;
+	QApplication a(argc, argv);
+	MainWindow w;
 
-    QCommandLineOption optionWidth(
-         QStringList() << "w" << "width",
-         "window default width",
-         "",
-         "800");
-         // "WWIDTH_DEFAULT");
+	QCommandLineParser parser;
 
-    QCommandLineOption optionHeight(
-         QStringList() << "h" << "height",
-         "window default height",
-         "",
-         "600");
-         // "WHEIGHT_DEFAULT");
+	QCommandLineOption optionWidth(
+		QStringList() << "w" << "width",
+		"window default width",
+		"",
+		"800");
+		// WWIDTH_DEFAULT);
 
-    parser.addOption(optionWidth);
-    parser.addOption(optionHeight);
-    parser.process(a);
+	QCommandLineOption optionHeight(
+		QStringList() << "h" << "height",
+		"window default height",
+		"",
+		"600");
+		// WHEIGHT_DEFAULT);
 
-    int WWIDTH  = parser.value(optionWidth ).toInt();
-    int WHEIGHT = parser.value(optionHeight).toInt();
+	QCommandLineOption output_file(
+		QStringList() << "o" << "output",
+		"output file name",
+		"",
+		"output.txt");
 
-    std::cout << "WWIDTH:=" << WWIDTH << "  " << "WHEIGHT:=" << WHEIGHT << std::endl;
 
-    w.resize(WWIDTH, WHEIGHT);
-    w.show();
+	parser.addOption(optionWidth);
+	parser.addOption(optionHeight);
+	parser.addOption(output_file);
+	parser.process(a);
 
-    return a.exec();
+	int WWIDTH  = parser.value(optionWidth ).toInt();
+	int WHEIGHT = parser.value(optionHeight).toInt();
+	// char[] OUTPUT_FILE = parser.value(output_file);
+
+	ssh_conf_parser p1;
+	p1.write_config(parser.value(output_file));
+
+	std::cout <<
+		"WWIDTH:="  << WWIDTH
+		<< "  " <<
+		"WHEIGHT:=" << WHEIGHT
+		<< std::endl;
+		// "output_file:=" << OUTPUT_FILE
+
+	w.resize(WWIDTH, WHEIGHT);
+	w.show();
+
+	return a.exec();
 }
